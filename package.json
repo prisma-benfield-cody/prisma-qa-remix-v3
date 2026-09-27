@@ -1,0 +1,28 @@
+{
+  "name": "qa-remix-v3",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_ENV=development node --watch --import remix/node-tsx server.ts",
+    "hmr": "NODE_ENV=development node hmr.ts",
+    "start": "NODE_ENV=production node --import remix/node-tsx server.ts",
+    "test": "NODE_ENV=test remix test",
+    "typecheck": "tsc --noEmit",
+    "deploy": "prisma deploy module.ts",
+    "composer:deploy": "prisma deploy module.ts"
+  },
+  "engines": {
+    "node": ">=24.3.0"
+  },
+  "dependencies": {
+    "@prisma/composer": "^0.20.0",
+    "@prisma/composer-prisma-cloud": "^0.20.0",
+    "prisma": "^8.0.0-rc.15",
+    "remix": "^3.0.0-rc.3"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "esbuild": "^0.28.2",
+    "typescript": "latest"
+  }
+}
