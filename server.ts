@@ -1,3 +1,7 @@
+if (!process.env.NODE_ENV) {
+  process.env.NODE_ENV = 'production'
+}
+
 import * as http from 'node:http'
 import { createRequestListener } from 'remix/node-fetch-server'
 

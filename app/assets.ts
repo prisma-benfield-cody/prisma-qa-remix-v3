@@ -1,8 +1,12 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import { createAssetServer } from 'remix/assets'
 import { uiHmr } from 'remix/ui-hmr/assets'
 
-const rootDir = process.cwd()
-const nodeEnv = process.env.NODE_ENV ?? 'development'
+// Prisma Compute runs Bun with cwd outside the uploaded bundle; pin root to this package.
+const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const nodeEnv = process.env.NODE_ENV ?? 'production'
 const isDevelopment = nodeEnv === 'development'
 const isHmr = Boolean(isDevelopment && process.env.REMIX_NODE_HMR)
 

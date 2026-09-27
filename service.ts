@@ -3,10 +3,10 @@ import { compute } from "@prisma/composer-prisma-cloud";
 
 export default compute({
   name: "app",
+  deps: {},
   build: node({
     module: import.meta.url,
-    // Ship the whole app tree; entry is the Remix Node server.
-    dir: ".",
+    dir: "./.output",
     entry: "server.ts",
   }),
 });

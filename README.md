@@ -1,25 +1,35 @@
 # Qa Remix V3
 
-A minimal Remix application starter with a home page.
+Minimal Remix **3.0.0-rc.3** app wired manually for **Prisma Compute** (Composer). There is no official `create-prisma --template remix` yet.
+
+Live QA deploy: https://t521r8mue4fkh12wbr21qwar.ewr.prisma.build (`cps_t521r8mue4fkh12wbr21qwar`).
 
 ## Starter Shape
 
 - `app/actions/controller.tsx` owns the top-level route actions.
 - `app/actions/home-page.tsx` and `app/actions/document.tsx` render the route-owned starter UI.
 - `app/actions/public/` contains the browser runtime entry and interactive prompt button.
-- `app/routes.ts` defines the shared route contract used by server and browser modules for type-safe hrefs.
-- `app/router.ts` wires routes to handlers and installs the standard Remix UI renderer used by actions.
-- `app/assets.ts` owns the server-side asset pipeline used by the asset route and render middleware.
-- Root `public/` contains static files served unchanged from the app root.
+- `app/routes.ts` / `app/router.ts` — route contract + Remix UI renderer.
+- `app/assets.ts` — asset pipeline; **`rootDir` pinned via `import.meta.url`** (Compute cwd is outside the uploaded bundle).
+- Composer: `module.ts`, `service.ts` (`deps: {}`, `dir: "./.output"`, `entry: "server.ts"`), `prisma-composer.config.ts`.
 
-## Growing The App
+## Prisma Compute deploy
 
-- Put top-level route actions in `app/actions/controller.tsx`.
-- Add `app/actions/<route-key>/controller.tsx` when a nested route map needs its own actions or middleware.
-- Add directories like `app/data/` or `test/` when the app actually needs them.
-- Move shared UI into `app/ui/` once more than one route needs it.
+Platform runtime is **Bun**, not Node. Artifact limit is **256MB** — do not ship full Composer `node_modules`.
 
-## Commands
+```sh
+# rebuild slim deploy tree (installs remix + natives into .output/; gitignored)
+node scripts/prepare-output.mjs
+
+# deploy (requires prisma auth)
+bun run deploy   # → prisma deploy module.ts
+```
+
+`.output/` is gitignored (includes `node_modules`). Source fixes + `scripts/prepare-output.mjs` are what to commit.
+
+Working recipe details / failure ladder: see `/workspace/prisma-qa/reports/remix-v3.md` in the QA workspace.
+
+## Local commands
 
 ```sh
 npm i
