@@ -4,10 +4,11 @@
  *
  * Recipe that succeeded in QA:
  * - app source + public + tsconfig + server.ts (NODE_ENV default production)
- * - package.json with remix only; bun/npm install inside .output
+ * - package.json with root dependencies mirrored (Composer lives in root
+ *   devDependencies so it is not included); bun/npm install inside .output
  * - keep musl + gnu native bindings
- * - React JSX shim re-exporting remix/ui runtimes (Bun ignored jsxImportSource)
- * - bunfig.toml jsxImportSource remix/ui
+ * - React JSX shim re-exporting remix/component runtimes (Bun ignored jsxImportSource)
+ * - bunfig.toml jsxImportSource remix/component
  */
 import {
   cpSync,
@@ -34,6 +35,7 @@ const serverOut = serverSrc.includes("process.env.NODE_ENV = 'production'")
   : `if (!process.env.NODE_ENV) {\n  process.env.NODE_ENV = 'production'\n}\n\n${serverSrc}`;
 writeFileSync(join(out, "server.ts"), serverOut);
 
+const pkg = JSON.parse(readFileSync("package.json", "utf8"));
 writeFileSync(
   join(out, "package.json"),
   JSON.stringify(
@@ -42,7 +44,7 @@ writeFileSync(
       private: true,
       type: "module",
       engines: { node: ">=24.3.0" },
-      dependencies: { remix: "3.0.0-rc.3" },
+      dependencies: pkg.dependencies || {},
     },
     null,
     2,
@@ -51,7 +53,7 @@ writeFileSync(
 
 writeFileSync(
   join(out, "bunfig.toml"),
-  `jsx = "react-jsx"\njsxImportSource = "remix/ui"\n`,
+  `jsx = "react-jsx"\njsxImportSource = "remix/component"\n`,
 );
 
 const install = spawnSync("bun", ["install"], {
@@ -90,12 +92,13 @@ writeFileSync(
 );
 writeFileSync(
   join(reactDir, "jsx-runtime.js"),
-  `export * from "remix/ui/jsx-runtime";\n`,
+  `export * from "remix/component/jsx-runtime";\n`,
 );
 writeFileSync(
   join(reactDir, "jsx-dev-runtime.js"),
-  `export * from "remix/ui/jsx-dev-runtime";\n`,
+  `export * from "remix/component/jsx-dev-runtime";\n`,
 );
 writeFileSync(join(reactDir, "index.js"), `export default {};\n`);
 
 console.log("Prepared", out, "— run: bun run deploy");
+spawnSync("du", ["-sh", out], { stdio: "inherit" });

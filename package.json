@@ -16,14 +16,14 @@
     "node": ">=24.3.0"
   },
   "dependencies": {
-    "@prisma/composer": "^0.20.0",
-    "@prisma/composer-prisma-cloud": "^0.20.0",
-    "prisma": "^8.0.0-rc.15",
-    "remix": "^3.0.0-rc.3"
+    "remix": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "latest",
     "esbuild": "^0.28.2",
-    "typescript": "latest"
+    "typescript": "latest",
+    "@prisma/composer": "^0.20.0",
+    "@prisma/composer-prisma-cloud": "^0.20.0",
+    "prisma": "^8.0.0-rc.15"
   }
 }

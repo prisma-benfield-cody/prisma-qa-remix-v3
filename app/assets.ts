@@ -2,7 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { createAssetServer } from 'remix/assets'
-import { uiHmr } from 'remix/ui-hmr/assets'
+import { componentHmr } from 'remix/component-hmr/assets'
 
 // Prisma Compute runs Bun with cwd outside the uploaded bundle; pin root to this package.
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -26,7 +26,7 @@ export const assets = createAssetServer({
         moduleImporter: 'remix/multiple-import-maps-polyfill',
       }
     : undefined,
-  scripts: { loaders: isHmr ? [uiHmr()] : undefined },
+  scripts: { loaders: isHmr ? [componentHmr()] : undefined },
 })
 
 const entry = 'app/actions/public/entry.ts'
